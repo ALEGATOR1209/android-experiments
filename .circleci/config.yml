@@ -13,7 +13,7 @@ jobs:
       - android/restore-build-cache
       - run:
           name: Setup Gradle permissions
-          commans: |
+          command: |
             chmod +x gradlew
       - run:
           name: Assemble debug build
