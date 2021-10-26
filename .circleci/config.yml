@@ -9,6 +9,7 @@ jobs:
       name: android/android-machine
       resource-class: xlarge
     steps:
+      - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
       - run:
