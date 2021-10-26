@@ -8,6 +8,6 @@ interface LoginUseCase {
     operator fun invoke(credentials: LoginCredentials): Completable
 }
 
-class LoginUseCaseImpl(private val dataSource: LoginDataSource) : LoginUseCase {
+internal class LoginUseCaseImpl(private val dataSource: LoginDataSource) : LoginUseCase {
     override fun invoke(credentials: LoginCredentials) = dataSource.login(credentials)
 }
