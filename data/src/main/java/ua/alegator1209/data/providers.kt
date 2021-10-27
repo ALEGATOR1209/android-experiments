@@ -11,22 +11,30 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 
 internal fun chucker(context: Context) = ChuckerInterceptor.Builder(context)
-    .redactHeaders("Authorization")
+//    .redactHeaders("Authorization")
     .alwaysReadResponseBody(true)
     .build()
 
 internal fun client(context: Context) = OkHttpClient.Builder()
+    .addInterceptor(GithubInterceptor())
     .addInterceptor(chucker(context))
     .build()
+
+private val json = Json {
+    ignoreUnknownKeys = true
+}
+
+@ExperimentalSerializationApi
+private val jsonFactory = json.asConverterFactory(
+    MediaType.parse("application/json") ?: error("Invalid type")
+)
 
 @ExperimentalSerializationApi
 internal fun retrofit(baseUrl: String, client: OkHttpClient) = Retrofit.Builder()
     .client(client)
     .baseUrl(baseUrl)
-    .addConverterFactory(Json.asConverterFactory(
-        MediaType.parse("application/json") ?: error("Invalid type")
-    ))
+    .addConverterFactory(jsonFactory)
     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .build()
 
-inline fun <reified T> Retrofit.api() = create(T::class.java)
+inline fun <reified T> Retrofit.api(): T = create(T::class.java)

@@ -13,36 +13,25 @@
         android:text="@string/login"
         android:layout_marginBottom="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/loginEdx"
+        app:layout_constraintBottom_toTopOf="@id/tokenEdx"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
-        android:id="@+id/loginEdx"
+        android:id="@+id/tokenEdx"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toTopOf="@id/passwordEdx"
+        app:layout_constraintBottom_toTopOf="@id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="@string/username"
+        android:hint="@string/personal_token"
         android:autofillHints="username"
         android:inputType="text" />
-    <EditText
-        android:id="@+id/passwordEdx"
-        app:layout_constraintTop_toBottomOf="@id/loginEdx"
-        app:layout_constraintBottom_toTopOf="@id/loginBtn"
-        android:layout_marginBottom="18dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:autofillHints="password"
-        android:inputType="textPassword" />
-
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"
-        app:layout_constraintTop_toBottomOf="@id/passwordEdx"
+        app:layout_constraintTop_toBottomOf="@id/tokenEdx"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

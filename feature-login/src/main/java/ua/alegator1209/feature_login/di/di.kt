@@ -1,6 +1,5 @@
 package ua.alegator1209.feature_login.di
 
-import dagger.Binds
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -13,7 +12,7 @@ import ua.alegator1209.feature_login.core.domain.interactor.LoginUseCase
 import ua.alegator1209.feature_login.core.domain.interactor.LoginUseCaseImpl
 import ua.alegator1209.feature_login.data.remote.api.LoginApi
 import ua.alegator1209.feature_login.data.remote.datasource.LoginRemoteDataSource
-import ua.alegator1209.feature_login.ui.LoginFragment
+import ua.alegator1209.feature_login.ui.LoginViewModel
 
 @Component(
     modules = [LoginModule::class],
@@ -21,7 +20,7 @@ import ua.alegator1209.feature_login.ui.LoginFragment
 )
 @PerFeature
 interface LoginComponent {
-    fun inject(loginFragment: LoginFragment)
+    fun inject(vm: LoginViewModel)
 }
 
 fun interface LoginComponentProvider {

@@ -2,9 +2,12 @@ package ua.alegator1209.feature_login.data.remote.api
 
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Header
+import ua.alegator1209.feature_login.data.remote.model.UserDto
 
 internal interface LoginApi {
-    @GET("/users/{username}")
-    fun getUserInfo(@Path(value = "username") username: String): Single<Unit>
+    @GET("/user")
+    fun getUserInfo(
+        @Header(value = "Authorization") token: String,
+    ): Single<UserDto>
 }

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Android Experiments</string>
     <string name="login">Login</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
+    <string name="personal_token">Personal Access Token</string>
 </resources>
