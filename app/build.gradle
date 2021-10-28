@@ -36,6 +36,13 @@ android {
     }
 }
 
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, '.github/hooks')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+}
+
+build.dependsOn installGitHooks
+
 dependencies {
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
     implementation "com.google.dagger:dagger:$dagger"
