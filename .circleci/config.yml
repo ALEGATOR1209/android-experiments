@@ -59,6 +59,7 @@ workflows:
   build:
     jobs:
       - assembleDebug
+      - lint
   lint:
     jobs:
       - lint
