@@ -60,4 +60,6 @@ workflows:
     jobs:
       - assembleDebug
       - lint
-      - unit-test
+      - unit-test:
+          requires:
+            - assembleDebug
