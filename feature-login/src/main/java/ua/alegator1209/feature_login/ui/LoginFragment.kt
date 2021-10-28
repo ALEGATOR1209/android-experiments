@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.BaseFragment
-import ua.alegator1209.feature_login.core.domain.interactor.LoginUseCase
 import ua.alegator1209.feature_login.databinding.FragmentLoginBinding
 import ua.alegator1209.feature_login.di.LoginComponentProvider
-import javax.inject.Inject
 
 class LoginFragment : BaseFragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -23,8 +21,6 @@ class LoginFragment : BaseFragment() {
     private var provider: LoginComponentProvider = LoginComponentProvider {
         error("Provider not set!")
     }
-
-    @Inject lateinit var useCase: LoginUseCase
 
     private val viewModel by lazy { ViewModelProvider(this)[LoginViewModel::class.java] }
 
@@ -70,12 +66,13 @@ class LoginFragment : BaseFragment() {
 
     private fun handleError(error: Throwable) {
         enableInput()
+        error.printStackTrace()
         shortToast(error.localizedMessage ?: "Unexpected error")
     }
 
     private fun handleSuccess(user: User) {
         enableInput()
-        shortToast(user.toString())
+        router.goTo(Stage.Profile)
     }
 
     override fun onDestroyView() {

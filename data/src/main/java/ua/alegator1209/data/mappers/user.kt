@@ -1,7 +1,7 @@
-package ua.alegator1209.feature_login.data.remote.mappers
+package ua.alegator1209.data.mappers
 
 import ua.alegator1209.core.domain.model.User
-import ua.alegator1209.feature_login.data.remote.model.UserDto
+import ua.alegator1209.data.model.UserDto
 
 fun UserDto.toUser() = User(
     login = login,

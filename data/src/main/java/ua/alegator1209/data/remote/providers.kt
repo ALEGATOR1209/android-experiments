@@ -1,4 +1,4 @@
-package ua.alegator1209.data
+package ua.alegator1209.data.remote
 
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor

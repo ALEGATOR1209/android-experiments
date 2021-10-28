@@ -1,4 +1,4 @@
-package ua.alegator1209.feature_login.data.remote.model
+package ua.alegator1209.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
