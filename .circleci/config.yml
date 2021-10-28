@@ -56,10 +56,8 @@ jobs:
             ktlint ./**/*.kt
 
 workflows:
-  build:
+  build-and-test:
     jobs:
       - assembleDebug
       - lint
-  lint:
-    jobs:
-      - lint
+      - unit-test
