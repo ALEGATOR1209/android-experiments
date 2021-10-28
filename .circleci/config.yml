@@ -38,7 +38,27 @@ jobs:
       - android/save-gradle-cache
       - android/save-build-cache
 
+  lint:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - run:
+          name: Install ktlint
+          command: |
+            curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.42.1/ktlint &&
+              chmod a+x ktlint &&
+              sudo mv ktlint /usr/local/bin
+      - run:
+          name: Run ktlint
+          command: |
+            ktlint ./**/*.kt
+
 workflows:
   build:
     jobs:
       - assembleDebug
+  lint:
+    jobs:
+      - lint
