@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import ua.alegator1209.core.di.PerFeature
 import ua.alegator1209.core.domain.interactor.LogInUseCase
 import ua.alegator1209.core_ui.BaseComponent
+import ua.alegator1209.data.di.NonAuthorized
 import ua.alegator1209.data.remote.api
 import ua.alegator1209.feature_login.core.datasource.LoginDataSource
 import ua.alegator1209.feature_login.core.domain.interactor.GitHubLoginUseCase
@@ -28,12 +29,11 @@ fun interface LoginComponentProvider {
     fun provideLoginComponent(): LoginComponent
 }
 
-
 @Module
 class LoginModule {
     @Provides
     @PerFeature
-    internal fun provideApi(retrofit: Retrofit): LoginApi = retrofit.api()
+    internal fun provideApi(@NonAuthorized retrofit: Retrofit): LoginApi = retrofit.api()
 
     @Provides
     @PerFeature
