@@ -1,4 +1,4 @@
-package ua.alegator1209.data.remote
+package ua.alegator1209.data.remote.common
 
 import okhttp3.Interceptor
 import okhttp3.Response

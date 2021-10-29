@@ -40,7 +40,7 @@ class ProfileFragment : BaseFragment() {
         viewModel.loadUserData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(this::showUser)
+            .doOnNext(this::showUser)
             .doOnError(this::showError)
             .subscribe()
 
