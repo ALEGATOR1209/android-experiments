@@ -42,6 +42,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraint"
     implementation "io.reactivex.rxjava3:rxjava:$rxjava"
     implementation "io.reactivex.rxjava3:rxandroid:$rxjava"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
 
@@ -51,4 +52,5 @@ dependencies {
 
     implementation(project(':core'))
     implementation(project(':core-ui'))
+    implementation(project(':data'))
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.BaseFragment
 import ua.alegator1209.feature_profile.databinding.FragmentProfileBinding
@@ -40,6 +41,8 @@ class ProfileFragment : BaseFragment() {
             .doOnSuccess(this::showUser)
             .doOnError(this::showError)
             .subscribe()
+
+        binding.logoutBtn.setOnClickListener { logout() }
     }
 
     private fun showUser(user: User) = with(binding) {
@@ -55,6 +58,13 @@ class ProfileFragment : BaseFragment() {
     private fun showError(throwable: Throwable) {
         throwable.printStackTrace()
         shortToast(throwable.localizedMessage ?: "Unexpected error")
+    }
+
+    private fun logout() {
+        viewModel.logout()
+            .doOnError(this::showError)
+            .doOnComplete { router.returnTo(Stage.Login) }
+            .subscribe()
     }
 
     override fun onDestroyView() {
