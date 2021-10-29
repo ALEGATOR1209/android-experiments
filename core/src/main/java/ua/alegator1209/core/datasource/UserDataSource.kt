@@ -6,10 +6,6 @@ import ua.alegator1209.core.domain.model.User
 
 interface UserDataSource {
     fun getUser(): Single<User>
-    fun getToken(): Single<String>
-    fun saveToken(token: String): Completable
     fun saveUser(user: User): Completable
-
-    fun clearToken(): Completable
-    fun clearUser(): Completable
+    fun deleteUser(): Completable
 }

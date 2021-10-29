@@ -15,10 +15,14 @@ internal fun chucker(context: Context) = ChuckerInterceptor.Builder(context)
     .alwaysReadResponseBody(true)
     .build()
 
-internal fun client(context: Context) = OkHttpClient.Builder()
-    .addInterceptor(GithubInterceptor())
-    .addInterceptor(chucker(context))
-    .build()
+internal fun client(
+    context: Context,
+    authInterceptor: AuthInterceptor? = null,
+) = OkHttpClient.Builder().apply {
+    addInterceptor(GithubInterceptor())
+    addInterceptor(chucker(context))
+    if (authInterceptor != null) addInterceptor(authInterceptor)
+}.build()
 
 private val json = Json {
     ignoreUnknownKeys = true
