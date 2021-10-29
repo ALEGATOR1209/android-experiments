@@ -2,4 +2,11 @@
     <string name="app_name">Android Experiments</string>
     <string name="login">Login</string>
     <string name="personal_token">Personal Access Token</string>
+    <string name="company_label">Company:</string>
+    <string name="blog_label">Blog:</string>
+    <string name="location_label">Location:</string>
+    <string name="public_repositories_label">Public repositories:</string>
+    <string name="public_gists_label">Public gists:</string>
+    <string name="logout">Logout</string>
+    <string name="profile_pic_desc">Profile picture</string>
 </resources>
