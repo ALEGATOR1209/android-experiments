@@ -1,6 +1,7 @@
 package ua.alegator1209.android_experiments
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core_ui.BaseActivity
 import ua.alegator1209.core_ui.BaseFragment
@@ -15,8 +16,17 @@ class MainActivity : BaseActivity() {
         Stage.Profile -> ProfileFragment.newInstance(application as ProfileComponentProvider)
     }
 
+    private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        goTo(Stage.Login)
+        viewModel.getTokenUseCase = baseApp.baseComponent.getTokenUseCase()
+        viewModel.checkToken()
+            .doOnSuccess { hasToken ->
+                goTo(if (hasToken) Stage.Profile else Stage.Login)
+            }.doOnError {
+                it.printStackTrace()
+                goTo(Stage.Login)
+            }.subscribe()
     }
 }

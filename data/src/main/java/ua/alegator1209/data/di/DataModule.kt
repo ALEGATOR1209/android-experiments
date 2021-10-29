@@ -44,5 +44,5 @@ class DataModule(
 
     @Provides
     @PerApplication
-    fun provideTokenDataSource(): TokenDataSource = TokenLocalDataSource()
+    fun provideTokenDataSource(context: Context): TokenDataSource = TokenLocalDataSource(context)
 }
