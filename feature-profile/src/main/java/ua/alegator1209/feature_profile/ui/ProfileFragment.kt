@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.BaseFragment
+import ua.alegator1209.feature_profile.R
 import ua.alegator1209.feature_profile.databinding.FragmentProfileBinding
 import ua.alegator1209.feature_profile.di.ProfileComponentProvider
 
@@ -38,7 +40,7 @@ class ProfileFragment : BaseFragment() {
         viewModel.loadUserData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(this::showUser)
+            .doOnNext(this::showUser)
             .doOnError(this::showError)
             .subscribe()
 
@@ -53,6 +55,13 @@ class ProfileFragment : BaseFragment() {
         location.text = user.location
         publicGists.text = user.publicGists.toString()
         publicRepos.text = user.publicRepos.toString()
+
+        Glide.with(this@ProfileFragment)
+            .load(user.avatarUrl)
+            .placeholder(R.drawable.user_pic_placeholder)
+            .centerCrop()
+            .circleCrop()
+            .into(profilePic)
     }
 
     private fun showError(throwable: Throwable) {

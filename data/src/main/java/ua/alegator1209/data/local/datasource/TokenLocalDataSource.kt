@@ -57,6 +57,7 @@ internal class TokenLocalDataSource(
     }
 
     private fun writeTokenToFile(token: String): Completable {
+        if (file.exists()) file.delete()
         encryptedFile.openFileOutput().use {
             it.write(token.toByteArray(StandardCharsets.UTF_8))
             it.flush()

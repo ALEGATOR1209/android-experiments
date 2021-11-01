@@ -1,4 +1,4 @@
-package ua.alegator1209.data.remote
+package ua.alegator1209.data.remote.common
 
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
@@ -24,7 +24,7 @@ internal fun client(
     if (authInterceptor != null) addInterceptor(authInterceptor)
 }.build()
 
-private val json = Json {
+internal val json = Json {
     ignoreUnknownKeys = true
 }
 

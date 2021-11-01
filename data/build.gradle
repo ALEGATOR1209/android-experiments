@@ -38,7 +38,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_json"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinx_serialization_converter"
-    implementation "androidx.security:security-crypto:1.0.0"
+    implementation "androidx.security:security-crypto:$crypto"
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
 

@@ -3,6 +3,18 @@ version: 2.1
 orbs:
   android: circleci/android@1.0
 
+commands:
+  init-fastlane:
+    parameters:
+    steps:
+      - restore_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+      - run: bundle check || bundle install --path vendor/bundle
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
 jobs:
   assembleDebug:
     executor:
@@ -12,14 +24,15 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      - run:
-          name: Setup Gradle permissions
-          command: |
-            chmod +x gradlew
+      - init-fastlane
       - run:
           name: Assemble debug build
           command: |
-            ./gradlew assembleDebug
+            bundle exec fastlane beta
+      - persist_to_workspace:
+          root: app/build/outputs/apk
+          paths:
+            - debug
       - store_artifacts:
           path: app/build/outputs/apk/debug
       - android/save-gradle-cache
@@ -33,8 +46,9 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
+      - init-fastlane
       - android/run-tests:
-          test-command: ./gradlew testDebug
+          test-command: bundle exec fastlane test
       - android/save-gradle-cache
       - android/save-build-cache
 
@@ -55,6 +69,17 @@ jobs:
           command: |
             ktlint ./**/*.kt
 
+  publish-to-github:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./apk
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ./apk/**/*.apk
+
 workflows:
   build-and-test:
     jobs:
@@ -63,3 +88,9 @@ workflows:
       - unit-test:
           requires:
             - assembleDebug
+      - publish-to-github:
+          requires:
+            - unit-test
+          filters:
+            branches:
+              ignore: /.*/

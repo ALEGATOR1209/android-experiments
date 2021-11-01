@@ -6,8 +6,10 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import ua.alegator1209.core.datasource.LoginDataSource
 import ua.alegator1209.core.datasource.TokenDataSource
 import ua.alegator1209.core.datasource.UserDataSource
+import ua.alegator1209.core.datasource.UserPersistentDataSource
 import ua.alegator1209.core.di.PerApplication
 import ua.alegator1209.core.domain.interactor.GetTokenUseCase
 import ua.alegator1209.core.domain.interactor.GetUserUseCase
@@ -60,19 +62,23 @@ class BaseModule(private val application: Application) {
 
     @Provides
     @PerApplication
-    fun provideGetUserUseCase(dataSource: UserDataSource) = GetUserUseCase(dataSource)
+    fun provideGetUserUseCase(
+        remote: UserDataSource,
+        local: UserPersistentDataSource,
+    ) = GetUserUseCase(remote, local)
 
     @Provides
     @PerApplication
     fun provideLogInUseCase(
-        userDataSource: UserDataSource,
-        tokenRepository: TokenRepository
-    ) = LogInUseCase(userDataSource, tokenRepository)
+        userDataSource: UserPersistentDataSource,
+        tokenRepository: TokenRepository,
+        loginDataSource: LoginDataSource
+    ) = LogInUseCase(userDataSource, tokenRepository, loginDataSource)
 
     @Provides
     @PerApplication
     fun provideLogOutUseCase(
-        userDataSource: UserDataSource,
+        userDataSource: UserPersistentDataSource,
         tokenRepository: TokenRepository
     ) = LogOutUseCase(userDataSource, tokenRepository)
 }

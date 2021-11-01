@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
-import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.BaseFragment
 import ua.alegator1209.feature_login.databinding.FragmentLoginBinding
 import ua.alegator1209.feature_login.di.LoginComponentProvider
@@ -70,7 +69,7 @@ class LoginFragment : BaseFragment() {
         shortToast(error.localizedMessage ?: "Unexpected error")
     }
 
-    private fun handleSuccess(user: User) {
+    private fun handleSuccess() {
         enableInput()
         router.goTo(Stage.Profile)
     }
