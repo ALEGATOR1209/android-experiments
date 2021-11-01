@@ -83,14 +83,17 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - assembleDebug
+      - assembleDebug:
+          filters:
+            tags:
+              only: /.*/
       - lint
       - unit-test:
           requires:
             - assembleDebug
       - publish-to-github:
           requires:
-            - unit-test
+            - assembleDebug
           filters:
             branches:
               ignore: /.*/
