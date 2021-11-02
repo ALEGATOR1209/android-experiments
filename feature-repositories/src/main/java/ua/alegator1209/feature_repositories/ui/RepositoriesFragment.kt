@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core_ui.BaseFragment
 import ua.alegator1209.feature_repositories.R
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesBinding
@@ -46,6 +47,8 @@ class RepositoriesFragment : BaseFragment() {
 
             recycler.adapter = adapter
             recycler.layoutManager = LinearLayoutManager(requireContext())
+
+            avatar.setOnClickListener { router.goTo(Stage.Profile) }
 
             viewModel.loadRepositories()
                 .subscribeOn(Schedulers.io())
