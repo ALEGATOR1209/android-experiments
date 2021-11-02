@@ -9,11 +9,16 @@ import ua.alegator1209.feature_login.di.LoginComponentProvider
 import ua.alegator1209.feature_login.ui.LoginFragment
 import ua.alegator1209.feature_profile.di.ProfileComponentProvider
 import ua.alegator1209.feature_profile.ui.ProfileFragment
+import ua.alegator1209.feature_repositories.di.RepositoryComponentProvider
+import ua.alegator1209.feature_repositories.ui.RepositoriesFragment
 
 class MainActivity : BaseActivity() {
     override val Stage.fragment: BaseFragment get() = when (this) {
         Stage.Login -> LoginFragment.newInstance(application as LoginComponentProvider)
         Stage.Profile -> ProfileFragment.newInstance(application as ProfileComponentProvider)
+        Stage.Repositories -> RepositoriesFragment.newInstance(
+            application as RepositoryComponentProvider
+        )
     }
 
     private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
@@ -23,7 +28,7 @@ class MainActivity : BaseActivity() {
         viewModel.getTokenUseCase = baseApp.baseComponent.getTokenUseCase()
         viewModel.checkToken()
             .doOnSuccess { hasToken ->
-                goTo(if (hasToken) Stage.Profile else Stage.Login)
+                goTo(if (hasToken) Stage.Repositories else Stage.Login)
             }.doOnError {
                 it.printStackTrace()
                 goTo(Stage.Login)
