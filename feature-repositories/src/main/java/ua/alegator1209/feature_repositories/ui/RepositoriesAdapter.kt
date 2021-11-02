@@ -26,9 +26,11 @@ internal class RepositoriesAdapter : RecyclerView.Adapter<RepositoriesAdapter.Re
     }
 
     fun append(newData: List<Repository>) {
+        if (newData.isEmpty()) return
+
         val lastIndex = dataset.lastIndex
         dataset = dataset + newData
-        notifyItemRangeInserted(dataset.lastIndex + 1, newData.size)
+        notifyItemRangeInserted(lastIndex + 1, newData.size)
     }
 
     inner class RepositoryHolder(

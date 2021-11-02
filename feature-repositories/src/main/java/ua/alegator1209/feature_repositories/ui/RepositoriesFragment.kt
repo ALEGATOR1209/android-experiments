@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -20,6 +21,7 @@ class RepositoriesFragment : BaseFragment() {
     private val binding: FragmentRepositoriesBinding get() = _binding!!
 
     private lateinit var provider: RepositoryComponentProvider
+    private val adapter: RepositoriesAdapter = RepositoriesAdapter()
     private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
 
     override fun onCreateView(
@@ -31,37 +33,60 @@ class RepositoriesFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         provider.provideRepositoryComponent().inject(viewModel)
 
-        with(binding) {
-            Glide.with(this@RepositoriesFragment)
-                .load(viewModel.user.avatarUrl)
-                .placeholder(R.drawable.user_pic_placeholder)
-                .centerCrop()
-                .circleCrop()
-                .into(avatar)
+        val layoutManager = LinearLayoutManager(requireContext())
+        recycler.adapter = adapter
+        recycler.layoutManager = layoutManager
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0) return // scrolling up, no need to load
 
-            val adapter = RepositoriesAdapter()
+                val firstVisibleItemPos = layoutManager.findFirstVisibleItemPosition()
+                val lastVisibleItemPos = layoutManager.findLastVisibleItemPosition()
 
-            recycler.adapter = adapter
-            recycler.layoutManager = LinearLayoutManager(requireContext())
+                val pageSize = viewModel.pageSize
+                val lastPage = layoutManager.itemCount / pageSize - 1
 
-            avatar.setOnClickListener { router.goTo(Stage.Profile) }
+                val half = pageSize / 2
+                val lastPageStart = lastPage * pageSize
+                val halfOfLastPage = lastPageStart + half
+                val scrolledHalfOfLastPage = lastVisibleItemPos >= halfOfLastPage
+                if (scrolledHalfOfLastPage) {
+                    loadRepos()
+                }
+            }
+        })
 
-            viewModel.loadRepositories()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(adapter::append)
-                .doOnError(this@RepositoriesFragment::showError)
-                .subscribe()
-        }
+        avatar.setOnClickListener { router.goTo(Stage.Profile) }
+
+        loadAvatar()
+        loadRepos()
     }
 
     private fun showError(e: Throwable) {
         e.printStackTrace()
         shortToast(e.localizedMessage ?: "Unknown error")
+    }
+
+    private fun loadAvatar() {
+        Glide.with(this@RepositoriesFragment)
+            .load(viewModel.user.avatarUrl)
+            .placeholder(R.drawable.user_pic_placeholder)
+            .centerCrop()
+            .circleCrop()
+            .into(binding.avatar)
+    }
+
+    private fun loadRepos() {
+        viewModel.loadRepositories()
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.doOnSuccess(adapter::append)
+            ?.doOnError(this@RepositoriesFragment::showError)
+            ?.subscribe()
     }
 
     override fun onDestroyView() {
