@@ -6,7 +6,7 @@ internal data class Repository(
     val id: Int,
     val name: String,
     val fullName: String,
-    val private: Boolean,
+    val isPrivate: Boolean,
     val url: String,
     val description: String,
     val isFork: Boolean,
