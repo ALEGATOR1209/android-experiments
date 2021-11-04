@@ -44,17 +44,16 @@ class RepositoriesFragment : BaseFragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy <= 0) return // scrolling up, no need to load
 
-                val firstVisibleItemPos = layoutManager.findFirstVisibleItemPosition()
-                val lastVisibleItemPos = layoutManager.findLastVisibleItemPosition()
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
                 val pageSize = viewModel.pageSize
-                val lastPage = layoutManager.itemCount / pageSize - 1
+                val lastPage = getLastPageNum(layoutManager.itemCount)
 
-                val half = pageSize / 2
                 val lastPageStart = lastPage * pageSize
-                val halfOfLastPage = lastPageStart + half
-                val scrolledHalfOfLastPage = lastVisibleItemPos >= halfOfLastPage
-                if (scrolledHalfOfLastPage) {
+                val halfOfLastPage = lastPageStart + pageSize / 2
+                val scrolledHalfOfLastPage = lastVisibleItem >= halfOfLastPage
+
+                if (scrolledHalfOfLastPage || lastVisibleItem == layoutManager.itemCount - 1) {
                     loadRepos()
                 }
             }
@@ -64,6 +63,15 @@ class RepositoriesFragment : BaseFragment() {
 
         loadAvatar()
         loadRepos()
+    }
+
+    private fun getLastPageNum(totalItems: Int): Int {
+        val pageSize = viewModel.pageSize - 1
+        val lastPage = totalItems / pageSize
+
+        val hasNotFullPage = totalItems % pageSize != 0
+
+        return if (hasNotFullPage) lastPage + 1 else lastPage
     }
 
     private fun showError(e: Throwable) {

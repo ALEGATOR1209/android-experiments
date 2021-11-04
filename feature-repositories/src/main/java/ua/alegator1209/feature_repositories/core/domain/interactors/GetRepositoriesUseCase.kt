@@ -14,7 +14,7 @@ internal class GetRepositoriesUseCase(
     private var page: Int = 0
     private var lastIndex = -1
 
-    operator fun invoke(): Single<List<Repository>> = remote.getRepositories(PAGE_SIZE, page)
+    operator fun invoke(): Single<List<Repository>> = remote.getRepositories(PAGE_SIZE, page + 1)
         .doOnSuccess { repos ->
             local.save(repos)
                 .doOnError { it.printStackTrace() }
@@ -27,7 +27,7 @@ internal class GetRepositoriesUseCase(
             repos.filterIndexed { i, _ ->
                 val pageIndex = page * PAGE_SIZE + i
                 pageIndex > lastIndex
-            }
+            }.sortedBy(Repository::id)
         }.doOnSuccess { repos ->
             lastIndex = max(lastIndex, page * PAGE_SIZE + repos.lastIndex)
             if (repos.size >= PAGE_SIZE) page++
