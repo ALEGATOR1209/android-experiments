@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Single
 import ua.alegator1209.feature_repositories.core.datasource.RepositoriesDataSource
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.data.remote.api.RepositoriesApi
-import ua.alegator1209.feature_repositories.data.remote.mappers.toRepository
+import ua.alegator1209.feature_repositories.data.mappers.toRepository
 import ua.alegator1209.feature_repositories.data.remote.model.RepositoryDto
 
 internal class RepositoriesRemoteDataSource(
