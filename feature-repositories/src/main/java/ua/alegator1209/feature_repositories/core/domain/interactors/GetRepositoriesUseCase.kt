@@ -19,9 +19,11 @@ internal class GetRepositoriesUseCase(
             local.save(repos)
                 .doOnError { it.printStackTrace() }
                 .subscribe()
-        }.onErrorResumeWith(Single.defer {
-            local.getRepositories(PAGE_SIZE, page)
-        }).map { repos ->
+        }.onErrorResumeWith(
+            Single.defer {
+                local.getRepositories(PAGE_SIZE, page)
+            }
+        ).map { repos ->
             repos.filterIndexed { i, _ ->
                 val pageIndex = page * PAGE_SIZE + i
                 pageIndex > lastIndex
