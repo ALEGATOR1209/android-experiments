@@ -7,7 +7,8 @@ sealed class Stage {
 }
 
 interface Router {
-    fun goTo(stage: Stage)
+    fun goTo(stage: Stage, saveToBackStack: Boolean = true)
     fun returnTo(stage: Stage)
     fun replaceTo(stage: Stage)
+    fun back()
 }

@@ -20,6 +20,7 @@ class MainActivity : BaseActivity() {
             application as RepositoryComponentProvider
         )
     }
+    override val backStack: MutableList<Stage> get() = viewModel.backStack
 
     private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
