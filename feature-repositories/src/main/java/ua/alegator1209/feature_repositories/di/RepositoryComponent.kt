@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import ua.alegator1209.core.di.PerFeature
-import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.BaseComponent
 import ua.alegator1209.data.local.common.db
 import ua.alegator1209.data.remote.common.api
@@ -42,9 +41,8 @@ class RepositoryModule {
     @Provides
     @PerFeature
     internal fun provideRemoteDataSource(
-        user: User,
         api: RepositoriesApi
-    ): RepositoriesDataSource = RepositoriesRemoteDataSource(api, user.name)
+    ): RepositoriesDataSource = RepositoriesRemoteDataSource(api)
 
     @Provides
     @PerFeature
