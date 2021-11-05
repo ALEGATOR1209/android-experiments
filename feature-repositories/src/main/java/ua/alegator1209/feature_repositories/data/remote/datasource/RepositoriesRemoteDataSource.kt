@@ -8,11 +8,10 @@ import ua.alegator1209.feature_repositories.data.remote.api.RepositoriesApi
 import ua.alegator1209.feature_repositories.data.remote.model.RepositoryDto
 
 internal class RepositoriesRemoteDataSource(
-    private val api: RepositoriesApi,
-    private val username: String,
+    private val api: RepositoriesApi
 ) : RepositoriesDataSource {
     override fun getRepositories(perPage: Int, page: Int): Single<List<Repository>> {
-        return api.getRepos(username, perPage, page).map { repos ->
+        return api.getRepos(perPage, page).map { repos ->
             repos.map(RepositoryDto::toRepository)
         }
     }
