@@ -42,6 +42,10 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
 
+    implementation "androidx.room:room-runtime:$room"
+    implementation "androidx.room:room-rxjava3:$room"
+    kapt "androidx.room:room-compiler:$room"
+
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker"
 

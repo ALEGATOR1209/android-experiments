@@ -19,4 +19,6 @@ class GetUserUseCase(
                     .toObservable()
             }
         )
+
+    fun getCached(): User = local.getUser().blockingGet()
 }

@@ -1,20 +1,21 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
 }
 
 android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "ua.alegator1209.android_experiments"
         minSdk 27
         targetSdk 31
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -30,24 +31,29 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
     buildFeatures {
         viewBinding true
     }
 }
 
-task installGitHooks(type: Copy) {
-    from new File(rootProject.rootDir, '.github/hooks')
-    into { new File(rootProject.rootDir, '.git/hooks') }
-}
-
-build.dependsOn installGitHooks
-
 dependencies {
+    implementation "androidx.core:core-ktx:$androidx_core"
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
-    implementation "com.google.dagger:dagger:$dagger"
+    implementation "com.google.android.material:material:$material"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraint"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_json"
     implementation "io.reactivex.rxjava3:rxjava:$rxjava"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxjava"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
+
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+    implementation "androidx.room:room-runtime:$room"
+    implementation "androidx.room:room-rxjava3:$room"
+    kapt "androidx.room:room-compiler:$room"
 
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
@@ -55,7 +61,5 @@ dependencies {
 
     implementation(project(':core'))
     implementation(project(':core-ui'))
-    implementation(project(':feature-login'))
-    implementation(project(':feature-profile'))
-    implementation(project(':feature-repositories'))
+    implementation(project(':data'))
 }

@@ -15,6 +15,7 @@ import ua.alegator1209.core.domain.interactor.GetTokenUseCase
 import ua.alegator1209.core.domain.interactor.GetUserUseCase
 import ua.alegator1209.core.domain.interactor.LogInUseCase
 import ua.alegator1209.core.domain.interactor.LogOutUseCase
+import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core.domain.repository.TokenRepository
 import ua.alegator1209.data.di.DataModule
 import ua.alegator1209.data.di.NonAuthorized
@@ -36,6 +37,7 @@ interface BaseComponent {
     fun getTokenUseCase(): GetTokenUseCase
     fun logInUseCase(): LogInUseCase
     fun logOutUseCase(): LogOutUseCase
+    fun user(): User
 
     @Component.Factory
     interface Factory {
@@ -51,6 +53,9 @@ class BaseModule(private val application: Application) {
     @Provides
     @PerApplication
     fun provideContext(): Context = application
+
+    @Provides
+    fun provideUser(getUserUseCase: GetUserUseCase): User = getUserUseCase.getCached()
 
     @Provides
     @PerApplication
