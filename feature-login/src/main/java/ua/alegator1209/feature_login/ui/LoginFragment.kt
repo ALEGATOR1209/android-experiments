@@ -71,7 +71,7 @@ class LoginFragment : BaseFragment() {
 
     private fun handleSuccess() {
         enableInput()
-        router.goTo(Stage.Profile)
+        router.goTo(Stage.Repositories, saveToBackStack = false)
     }
 
     override fun onDestroyView() {
