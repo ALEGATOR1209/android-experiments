@@ -23,4 +23,12 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun shortToast(@StringRes res: Int) = shortToast(getString(res))
+
+    protected fun setOnBackPressed(f: () -> Unit) {
+        baseActivity.onBackPressed = f
+    }
+
+    protected fun clearOnBackPressed() {
+        baseActivity.onBackPressed = null
+    }
 }

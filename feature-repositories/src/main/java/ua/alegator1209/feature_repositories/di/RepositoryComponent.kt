@@ -18,12 +18,12 @@ import ua.alegator1209.feature_repositories.data.local.db.RepositoriesDatabase
 import ua.alegator1209.feature_repositories.data.local.db.RepositoryDao
 import ua.alegator1209.feature_repositories.data.remote.api.RepositoriesApi
 import ua.alegator1209.feature_repositories.data.remote.datasource.RepositoriesRemoteDataSource
-import ua.alegator1209.feature_repositories.ui.RepositoriesViewModel
+import ua.alegator1209.feature_repositories.ui.RepositoryViewModel
 
 @PerFeature
 @Component(modules = [RepositoryModule::class], dependencies = [BaseComponent::class])
 interface RepositoryComponent {
-    fun inject(viewModel: RepositoriesViewModel)
+    fun inject(viewModel: RepositoryViewModel)
 }
 
 interface RepositoryComponentProvider {

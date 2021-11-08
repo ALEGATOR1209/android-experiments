@@ -1,7 +1,6 @@
 package ua.alegator1209.core_ui.ui.activity
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import ua.alegator1209.core.common.AppRouter
 import ua.alegator1209.core.common.Stage
@@ -17,19 +16,11 @@ abstract class BaseActivity : AppCompatActivity(), AppRouter {
     abstract val Stage.fragment: FeatureFragment
     abstract val backStack: MutableList<Stage>
 
+    var onBackPressed: (() -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    back()
-                }
-            }
-        )
-
         setContentView(binding.root)
     }
 
@@ -80,5 +71,9 @@ abstract class BaseActivity : AppCompatActivity(), AppRouter {
         }
 
         changeFragment(backStack.last().fragment, AnimationSet.Backward)
+    }
+
+    override fun onBackPressed() {
+        onBackPressed?.invoke() ?: back()
     }
 }

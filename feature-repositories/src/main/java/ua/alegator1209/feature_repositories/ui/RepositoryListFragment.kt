@@ -12,15 +12,18 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
+import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesBinding
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
+import ua.alegator1209.feature_repositories.ui.recycler.RepositoriesAdapter
+import kotlin.math.max
 
 internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
     private var _binding: FragmentRepositoriesBinding? = null
     private val binding: FragmentRepositoriesBinding get() = _binding!!
 
     private val adapter: RepositoriesAdapter = RepositoriesAdapter()
-    private val viewModel: RepositoriesViewModel by sharedViewModel()
+    private val viewModel: RepositoryViewModel by featureViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +37,7 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter.onRepositoryClicked = this@RepositoryListFragment::selectRepository
         val layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
         recycler.layoutManager = layoutManager
@@ -51,7 +55,8 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
                 val scrolledHalfOfLastPage = lastVisibleItem >= halfOfLastPage
 
                 if (scrolledHalfOfLastPage || lastVisibleItem == layoutManager.itemCount - 1) {
-                    loadRepos()
+//                    println("LOAD PAGE: ${1 + lastPage}, start=$lastPageStart, lastItem=$lastVisibleItem")
+                    loadRepos(lastPage + 1)
                 }
             }
         })
@@ -59,16 +64,18 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
         avatar.setOnClickListener { appRouter.goTo(Stage.Profile) }
 
         loadAvatar()
-        loadRepos()
+        loadRepos(page = 0)
     }
 
-    private fun getLastPageNum(totalItems: Int): Int {
-        val pageSize = viewModel.pageSize - 1
-        val lastPage = totalItems / pageSize
+    private fun getLastPageNum(itemsCount: Int): Int {
+        val pageSize = viewModel.pageSize
+        val lastPage = (itemsCount - 1) / pageSize
 
-        val hasNotFullPage = totalItems % pageSize != 0
-
-        return if (hasNotFullPage) lastPage + 1 else lastPage
+        return if (itemsCount % pageSize != 0) {
+            max(lastPage - 1, 0)
+        } else {
+            lastPage
+        }
     }
 
     private fun showError(e: Throwable) {
@@ -85,13 +92,18 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
             .into(binding.avatar)
     }
 
-    private fun loadRepos() {
-        viewModel.loadRepositories()
+    private fun loadRepos(page: Int) {
+        viewModel.loadRepositories(page)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnSuccess(adapter::append)
             ?.doOnError(this::showError)
             ?.subscribe()
+    }
+
+    private fun selectRepository(repository: Repository) {
+        viewModel.selectRepository(repository)
+        router.goTo(RepositoryPhase.Detailed)
     }
 
     override fun onDestroyView() {

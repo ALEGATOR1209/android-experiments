@@ -8,7 +8,7 @@ import ua.alegator1209.core.common.Phase
 
 /** Part of the larger feature, usually one screen, that is managed by [FeatureRouterFragment].
  * Represents one [Phase] of the said feature. */
-abstract class PhaseFragment<in T : Phase> : BaseFragment() {
+abstract class PhaseFragment<T : Phase> : BaseFragment() {
     val featureFragment: FeatureRouterFragment<T>
         get() {
             @Suppress("UNCHECKED_CAST")
@@ -20,7 +20,7 @@ abstract class PhaseFragment<in T : Phase> : BaseFragment() {
 
     /** Lazily creates a [ViewModel] that can be shared across whole feature.
      * Owner of the [ViewModelProvider] store is parent [featureFragment]. */
-    protected inline fun <reified K : ViewModel> sharedViewModel() = lazy {
+    protected inline fun <reified K : ViewModel> featureViewModel() = lazy {
         ViewModelProvider(featureFragment)[K::class.java]
     }
 }

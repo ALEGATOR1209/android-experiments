@@ -10,17 +10,19 @@ import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 class RepositoryFragment : FeatureRouterFragment<RepositoryPhase>() {
     override val RepositoryPhase.fragment: PhaseFragment<RepositoryPhase>
         get() = when (this) {
-            RepositoryPhase.Detailed -> TODO()
+            RepositoryPhase.Detailed -> RepositoryDetailsFragment()
             RepositoryPhase.List -> RepositoryListFragment()
         }
 
     private val provider: RepositoryComponentProvider by provider()
-    private val viewModel: RepositoriesViewModel by viewModel()
+    private val viewModel: RepositoryViewModel by viewModel()
+
+    override val featureBackStack: MutableList<RepositoryPhase>
+        get() = viewModel.backStack
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         provider.provideRepositoryComponent().inject(viewModel)
-
-        goTo(RepositoryPhase.List)
+        goTo(featureBackStack.lastOrNull() ?: RepositoryPhase.List)
     }
 }

@@ -11,7 +11,7 @@ internal class RepositoriesRemoteDataSource(
     private val api: RepositoriesApi
 ) : RepositoriesDataSource {
     override fun getRepositories(perPage: Int, page: Int): Single<List<Repository>> {
-        return api.getRepos(perPage, page).map { repos ->
+        return api.getRepos(perPage, page + 1).map { repos ->
             repos.map(RepositoryDto::toRepository)
         }
     }
