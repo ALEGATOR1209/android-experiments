@@ -4,25 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
-import ua.alegator1209.core_ui.BaseFragment
+import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesBinding
-import ua.alegator1209.feature_repositories.di.RepositoryComponentProvider
+import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 
-class RepositoriesFragment : BaseFragment() {
+internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
     private var _binding: FragmentRepositoriesBinding? = null
     private val binding: FragmentRepositoriesBinding get() = _binding!!
 
-    private lateinit var provider: RepositoryComponentProvider
     private val adapter: RepositoriesAdapter = RepositoriesAdapter()
-    private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
+    private val viewModel: RepositoriesViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +33,6 @@ class RepositoriesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        provider.provideRepositoryComponent().inject(viewModel)
 
         val layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
@@ -59,7 +56,7 @@ class RepositoriesFragment : BaseFragment() {
             }
         })
 
-        avatar.setOnClickListener { router.goTo(Stage.Profile) }
+        avatar.setOnClickListener { appRouter.goTo(Stage.Profile) }
 
         loadAvatar()
         loadRepos()
@@ -80,7 +77,7 @@ class RepositoriesFragment : BaseFragment() {
     }
 
     private fun loadAvatar() {
-        Glide.with(this@RepositoriesFragment)
+        Glide.with(this)
             .load(viewModel.user.avatarUrl)
             .placeholder(R.drawable.user_pic_placeholder)
             .centerCrop()
@@ -93,18 +90,12 @@ class RepositoriesFragment : BaseFragment() {
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnSuccess(adapter::append)
-            ?.doOnError(this@RepositoriesFragment::showError)
+            ?.doOnError(this::showError)
             ?.subscribe()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(provider: RepositoryComponentProvider) = RepositoriesFragment().also {
-            it.provider = provider
-        }
     }
 }

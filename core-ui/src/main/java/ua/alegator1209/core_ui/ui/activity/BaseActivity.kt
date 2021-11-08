@@ -1,17 +1,20 @@
-package ua.alegator1209.core_ui
+package ua.alegator1209.core_ui.ui.activity
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.AnimRes
 import androidx.appcompat.app.AppCompatActivity
-import ua.alegator1209.core.common.Router
+import ua.alegator1209.core.common.AppRouter
 import ua.alegator1209.core.common.Stage
+import ua.alegator1209.core_ui.R
+import ua.alegator1209.core_ui.animation.AnimationSet
 import ua.alegator1209.core_ui.databinding.ActivityMainBinding
+import ua.alegator1209.core_ui.ui.application.BaseApplication
+import ua.alegator1209.core_ui.ui.fragments.FeatureFragment
 
-abstract class BaseActivity : AppCompatActivity(), Router {
+abstract class BaseActivity : AppCompatActivity(), AppRouter {
     private lateinit var binding: ActivityMainBinding
     protected val baseApp: BaseApplication get() = application as BaseApplication
-    abstract val Stage.fragment: BaseFragment
+    abstract val Stage.fragment: FeatureFragment
     abstract val backStack: MutableList<Stage>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +34,7 @@ abstract class BaseActivity : AppCompatActivity(), Router {
     }
 
     private fun changeFragment(
-        fragment: BaseFragment,
+        fragment: FeatureFragment,
         animation: AnimationSet? = null,
     ) {
         supportFragmentManager.beginTransaction().apply {
@@ -40,25 +43,17 @@ abstract class BaseActivity : AppCompatActivity(), Router {
         }.commit()
     }
 
-    private sealed class AnimationSet(
-        @AnimRes val enter: Int,
-        @AnimRes val exit: Int,
-    ) {
-        object Forward : AnimationSet(R.anim.slide_from_right, R.anim.slide_to_left)
-        object Backward : AnimationSet(R.anim.slide_from_left, R.anim.slide_to_right)
+    override fun goTo(navigable: Stage, saveToBackStack: Boolean) {
+        if (saveToBackStack) backStack += navigable
+        changeFragment(navigable.fragment, AnimationSet.Forward)
     }
 
-    override fun goTo(stage: Stage, saveToBackStack: Boolean) {
-        if (saveToBackStack) backStack += stage
-        changeFragment(stage.fragment, AnimationSet.Forward)
-    }
-
-    override fun returnTo(stage: Stage) {
-        when (val i = backStack.lastIndexOf(stage)) {
+    override fun returnTo(navigable: Stage) {
+        when (val i = backStack.lastIndexOf(navigable)) {
             -1 -> {
                 backStack.clear()
-                backStack += stage
-                changeFragment(stage.fragment, AnimationSet.Backward)
+                backStack += navigable
+                changeFragment(navigable.fragment, AnimationSet.Backward)
                 return
             }
             backStack.lastIndex -> {
@@ -66,14 +61,14 @@ abstract class BaseActivity : AppCompatActivity(), Router {
             }
             else -> {
                 for (j in i + 1..backStack.lastIndex) backStack.removeAt(j)
-                changeFragment(stage.fragment, AnimationSet.Backward)
+                changeFragment(navigable.fragment, AnimationSet.Backward)
             }
         }
     }
 
-    override fun replaceTo(stage: Stage) {
-        backStack[backStack.lastIndex] = stage
-        changeFragment(stage.fragment)
+    override fun replaceTo(navigable: Stage) {
+        backStack[backStack.lastIndex] = navigable
+        changeFragment(navigable.fragment)
     }
 
     override fun back() {
