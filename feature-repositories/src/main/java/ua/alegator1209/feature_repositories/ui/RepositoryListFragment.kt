@@ -13,14 +13,14 @@ import ua.alegator1209.core.common.Stage
 import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
-import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesBinding
+import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesListBinding
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 import ua.alegator1209.feature_repositories.ui.recycler.RepositoriesAdapter
 import kotlin.math.max
 
 internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
-    private var _binding: FragmentRepositoriesBinding? = null
-    private val binding: FragmentRepositoriesBinding get() = _binding!!
+    private var _binding: FragmentRepositoriesListBinding? = null
+    private val binding: FragmentRepositoriesListBinding get() = _binding!!
 
     private val adapter: RepositoriesAdapter = RepositoriesAdapter()
     private val viewModel: RepositoryViewModel by featureViewModel()
@@ -30,7 +30,7 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRepositoriesBinding.inflate(inflater, container, false)
+        _binding = FragmentRepositoriesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
