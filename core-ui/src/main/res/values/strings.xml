@@ -10,4 +10,7 @@
     <string name="logout">Logout</string>
     <string name="profile_pic_desc">Profile picture</string>
     <string name="my_repos">My Repositories</string>
+    <string name="private_label">Private</string>
+    <string name="public_label">Public</string>
+    <string name="contributors">Contributors</string>
 </resources>
