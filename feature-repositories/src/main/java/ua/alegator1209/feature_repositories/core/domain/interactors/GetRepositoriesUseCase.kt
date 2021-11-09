@@ -12,26 +12,25 @@ internal class GetRepositoriesUseCase(
     val PAGE_SIZE = 10
     private var cache = linkedSetOf<Repository>()
 
-    operator fun invoke(page: Int): Single<List<Repository>> {
+    operator fun invoke(page: Int, fromIndex: Int): Single<List<Repository>> {
         val pageStartIndex = page * PAGE_SIZE
         val pageEndIndex = pageStartIndex + PAGE_SIZE - 1
 
         return if (cache.size >= pageEndIndex) {
-            Single.just(cache.toList().subList(pageStartIndex, pageEndIndex + 1))
+            Single.just(cache.toList().subList(pageStartIndex + fromIndex, pageEndIndex + 1))
         } else {
-            getPage(page)
+            getPage(page, fromIndex)
         }
     }
 
-    private fun getPage(pageNum: Int) = remote.getRepositories(PAGE_SIZE, pageNum)
+    private fun getPage(pageNum: Int, fromIndex: Int) = remote.getRepositories(PAGE_SIZE, pageNum)
         .retry(2)
+        .map { it.drop(fromIndex) }
         .onErrorResumeWith(
             Single.defer {
                 local.getRepositories(PAGE_SIZE, pageNum)
             }
-        )
-        .map { repos -> repos.sortedBy(Repository::id) }
-        .doOnSuccess(this::save)
+        ).doOnSuccess(this::save)
 
     private fun save(repositories: List<Repository>) {
         cache.addAll(repositories)

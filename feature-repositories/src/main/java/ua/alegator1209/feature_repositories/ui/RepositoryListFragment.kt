@@ -51,12 +51,12 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
                 val lastPage = getLastPageNum(layoutManager.itemCount)
 
                 val lastPageStart = lastPage * pageSize
-                val halfOfLastPage = lastPageStart + pageSize / 2
+                val lastPageEnd = lastPageStart + pageSize - 1
+                val halfOfLastPage = (lastPageEnd + lastPageStart) / 2
                 val scrolledHalfOfLastPage = lastVisibleItem >= halfOfLastPage
 
                 if (scrolledHalfOfLastPage || lastVisibleItem == layoutManager.itemCount - 1) {
-//                    println("LOAD PAGE: ${1 + lastPage}, start=$lastPageStart, lastItem=$lastVisibleItem")
-                    loadRepos(lastPage + 1)
+                    loadRepos(lastPage + 1, fromIndex = layoutManager.itemCount % pageSize)
                 }
             }
         })
@@ -92,8 +92,8 @@ internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
             .into(binding.avatar)
     }
 
-    private fun loadRepos(page: Int) {
-        viewModel.loadRepositories(page)
+    private fun loadRepos(page: Int, fromIndex: Int = 0) {
+        viewModel.loadRepositories(page, fromIndex)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnSuccess(adapter::append)

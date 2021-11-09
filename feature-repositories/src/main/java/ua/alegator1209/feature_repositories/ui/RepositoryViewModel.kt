@@ -26,9 +26,9 @@ class RepositoryViewModel : ViewModel() {
     internal val pageSize: Int get() = getRepositoriesUseCase.PAGE_SIZE
     private val loading = AtomicBoolean(false)
 
-    internal fun loadRepositories(page: Int): Single<List<Repository>>? {
+    internal fun loadRepositories(page: Int, fromIndex: Int): Single<List<Repository>>? {
         return if (loading.compareAndSet(false, true)) {
-            getRepositoriesUseCase(page).doFinally {
+            getRepositoriesUseCase(page, fromIndex).doFinally {
                 loading.set(false)
             }
         } else {

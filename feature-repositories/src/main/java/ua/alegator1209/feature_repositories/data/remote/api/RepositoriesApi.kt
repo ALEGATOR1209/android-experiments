@@ -9,6 +9,7 @@ internal interface RepositoriesApi {
     @GET("user/repos")
     fun getRepos(
         @Query("per_page") perPage: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("sort") sort: String = "full_name",
     ): Single<List<RepositoryDto>>
 }
