@@ -8,9 +8,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
+import ua.alegator1209.feature_repositories.core.domain.model.Contributor
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoryDetailsBinding
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
@@ -73,7 +73,7 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
         forkCount.text = repository.forksCount.toString()
     }
 
-    private fun showContributors(contributors: List<User>) {
+    private fun showContributors(contributors: List<Contributor>) {
         contributorsAdapter.updateContributors(contributors)
     }
 

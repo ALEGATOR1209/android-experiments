@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.feature_repositories.R
+import ua.alegator1209.feature_repositories.core.domain.model.Contributor
 import ua.alegator1209.feature_repositories.databinding.RecyclerItemContributorBinding
 
 internal class ContributorsAdapter :
     RecyclerView.Adapter<ContributorsAdapter.ContributorHolder>() {
-    private var contributors: List<User> = listOf()
+    private var contributors: List<Contributor> = listOf()
 
     override fun getItemCount(): Int = if (contributors.isNotEmpty()) contributors.size + 1 else 0
 
@@ -32,7 +32,7 @@ internal class ContributorsAdapter :
         }
     }
 
-    fun updateContributors(newContributors: List<User>) {
+    fun updateContributors(newContributors: List<Contributor>) {
         contributors = newContributors
         notifyDataSetChanged()
     }
@@ -40,7 +40,7 @@ internal class ContributorsAdapter :
     inner class ContributorHolder(
         private val binding: RecyclerItemContributorBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindContributor(contributor: User) = with(binding) {
+        fun bindContributor(contributor: Contributor) = with(binding) {
             Glide.with(itemView.context)
                 .load(contributor.avatarUrl)
                 .placeholder(R.drawable.user_pic_placeholder)

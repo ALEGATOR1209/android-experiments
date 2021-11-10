@@ -7,6 +7,7 @@ import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetContributorsUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetRepositoriesUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.SelectRepositoryUseCase
+import ua.alegator1209.feature_repositories.core.domain.model.Contributor
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 import java.util.concurrent.atomic.AtomicBoolean
@@ -51,7 +52,7 @@ class RepositoryViewModel : ViewModel() {
             ?: Single.error(IllegalStateException("No selected repository"))
     }
 
-    internal fun getContributorsForSelectedRepository(): Flowable<List<User>> {
+    internal fun getContributorsForSelectedRepository(): Flowable<List<Contributor>> {
         val repository = selectRepositoryUseCase.selectedRepository ?: return Flowable.error(
             IllegalStateException("Repository not selected")
         )
