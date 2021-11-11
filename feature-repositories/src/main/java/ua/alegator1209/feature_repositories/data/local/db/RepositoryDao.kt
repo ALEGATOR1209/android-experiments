@@ -23,4 +23,10 @@ internal interface RepositoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveContributors(contributors: List<ContributorEntity>): Completable
+
+    @Query("SELECT * FROM languages WHERE repository_id = :repositoryId")
+    fun getLanguages(repositoryId: Int): Single<List<LanguageEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveLanguages(languages: List<LanguageEntity>): Completable
 }

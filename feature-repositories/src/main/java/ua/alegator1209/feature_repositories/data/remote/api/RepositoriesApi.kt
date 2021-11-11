@@ -20,4 +20,10 @@ internal interface RepositoriesApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String,
     ): Single<List<ContributorDto>>
+
+    @GET("/repos/{owner}/{repo}/languages")
+    fun getLanguages(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+    ): Single<Map<String, Int>>
 }
