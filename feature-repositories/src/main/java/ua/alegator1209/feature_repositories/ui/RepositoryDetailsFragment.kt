@@ -46,16 +46,12 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
         viewModel.selectedRepositoryInfo()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(this::showRepository)
-            .doOnError(this::showError)
-            .subscribe()
+            .subscribe(this::showRepository, this::showError)
 
         viewModel.getContributorsForSelectedRepository()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(this::showContributors)
-            .doOnError(this::showError)
-            .subscribe()
+            .subscribe(this::showContributors, this::showError)
     }
 
     private fun showRepository(repository: Repository) = with(binding) {

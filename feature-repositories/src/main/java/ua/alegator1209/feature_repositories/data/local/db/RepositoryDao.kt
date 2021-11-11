@@ -17,4 +17,10 @@ internal interface RepositoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveRepositories(repositories: List<RepositoryEntity>): Completable
+
+    @Query("SELECT * FROM contributors WHERE repository_id = :repositoryId")
+    fun getContributors(repositoryId: Int): Single<List<ContributorEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveContributors(contributors: List<ContributorEntity>): Completable
 }

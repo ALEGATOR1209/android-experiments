@@ -75,8 +75,10 @@ class RepositoryModule {
 
     @Provides
     @PerFeature
-    internal fun provideContributorsLocalDataSource(): ContributorsCachingDataSource {
-        return ContributorsLocalCachingDataSource()
+    internal fun provideContributorsLocalDataSource(
+        dao: RepositoryDao
+    ): ContributorsCachingDataSource {
+        return ContributorsLocalCachingDataSource(dao)
     }
 
     @Provides

@@ -57,9 +57,6 @@ class RepositoryViewModel : ViewModel() {
             IllegalStateException("Repository not selected")
         )
 
-        return getContributorsUseCase(
-            owner = repository.fullName.substringBefore('/'),
-            repository = repository.fullName.substringAfter('/')
-        )
+        return getContributorsUseCase(repository)
     }
 }
