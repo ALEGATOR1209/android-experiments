@@ -2,7 +2,7 @@ package ua.alegator1209.feature_profile.di
 
 import dagger.Component
 import ua.alegator1209.core.di.PerFeature
-import ua.alegator1209.core_ui.BaseComponent
+import ua.alegator1209.core_ui.di.BaseComponent
 import ua.alegator1209.feature_profile.ui.ProfileViewModel
 
 @PerFeature

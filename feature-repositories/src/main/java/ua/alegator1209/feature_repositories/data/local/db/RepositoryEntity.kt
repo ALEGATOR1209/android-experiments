@@ -3,7 +3,6 @@ package ua.alegator1209.feature_repositories.data.local.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "repositories")
 internal data class RepositoryEntity(

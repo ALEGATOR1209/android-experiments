@@ -4,39 +4,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
-import ua.alegator1209.core_ui.BaseFragment
+import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
-import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesBinding
-import ua.alegator1209.feature_repositories.di.RepositoryComponentProvider
+import ua.alegator1209.feature_repositories.core.domain.model.Repository
+import ua.alegator1209.feature_repositories.databinding.FragmentRepositoriesListBinding
+import ua.alegator1209.feature_repositories.routing.RepositoryPhase
+import ua.alegator1209.feature_repositories.ui.recycler.RepositoriesAdapter
+import kotlin.math.max
 
-class RepositoriesFragment : BaseFragment() {
-    private var _binding: FragmentRepositoriesBinding? = null
-    private val binding: FragmentRepositoriesBinding get() = _binding!!
+internal class RepositoryListFragment : PhaseFragment<RepositoryPhase>() {
+    private var _binding: FragmentRepositoriesListBinding? = null
+    private val binding: FragmentRepositoriesListBinding get() = _binding!!
 
-    private lateinit var provider: RepositoryComponentProvider
     private val adapter: RepositoriesAdapter = RepositoriesAdapter()
-    private val viewModel by lazy { ViewModelProvider(this)[RepositoriesViewModel::class.java] }
+    private val viewModel: RepositoryViewModel by featureViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRepositoriesBinding.inflate(inflater, container, false)
+        _binding = FragmentRepositoriesListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        provider.provideRepositoryComponent().inject(viewModel)
 
+        adapter.onRepositoryClicked = this@RepositoryListFragment::selectRepository
         val layoutManager = LinearLayoutManager(requireContext())
         recycler.adapter = adapter
         recycler.layoutManager = layoutManager
@@ -50,28 +51,31 @@ class RepositoriesFragment : BaseFragment() {
                 val lastPage = getLastPageNum(layoutManager.itemCount)
 
                 val lastPageStart = lastPage * pageSize
-                val halfOfLastPage = lastPageStart + pageSize / 2
+                val lastPageEnd = lastPageStart + pageSize - 1
+                val halfOfLastPage = (lastPageEnd + lastPageStart) / 2
                 val scrolledHalfOfLastPage = lastVisibleItem >= halfOfLastPage
 
                 if (scrolledHalfOfLastPage || lastVisibleItem == layoutManager.itemCount - 1) {
-                    loadRepos()
+                    loadRepos(lastPage + 1, fromIndex = layoutManager.itemCount % pageSize)
                 }
             }
         })
 
-        avatar.setOnClickListener { router.goTo(Stage.Profile) }
+        avatar.setOnClickListener { appRouter.goTo(Stage.Profile) }
 
         loadAvatar()
-        loadRepos()
+        loadRepos(page = 0)
     }
 
-    private fun getLastPageNum(totalItems: Int): Int {
-        val pageSize = viewModel.pageSize - 1
-        val lastPage = totalItems / pageSize
+    private fun getLastPageNum(itemsCount: Int): Int {
+        val pageSize = viewModel.pageSize
+        val lastPage = (itemsCount - 1) / pageSize
 
-        val hasNotFullPage = totalItems % pageSize != 0
-
-        return if (hasNotFullPage) lastPage + 1 else lastPage
+        return if (itemsCount % pageSize != 0) {
+            max(lastPage - 1, 0)
+        } else {
+            lastPage
+        }
     }
 
     private fun showError(e: Throwable) {
@@ -80,7 +84,7 @@ class RepositoriesFragment : BaseFragment() {
     }
 
     private fun loadAvatar() {
-        Glide.with(this@RepositoriesFragment)
+        Glide.with(this)
             .load(viewModel.user.avatarUrl)
             .placeholder(R.drawable.user_pic_placeholder)
             .centerCrop()
@@ -88,23 +92,22 @@ class RepositoriesFragment : BaseFragment() {
             .into(binding.avatar)
     }
 
-    private fun loadRepos() {
-        viewModel.loadRepositories()
+    private fun loadRepos(page: Int, fromIndex: Int = 0) {
+        viewModel.loadRepositories(page, fromIndex)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnSuccess(adapter::append)
-            ?.doOnError(this@RepositoriesFragment::showError)
+            ?.doOnError(this::showError)
             ?.subscribe()
+    }
+
+    private fun selectRepository(repository: Repository) {
+        viewModel.selectRepository(repository)
+        router.goTo(RepositoryPhase.Detailed)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(provider: RepositoryComponentProvider) = RepositoriesFragment().also {
-            it.provider = provider
-        }
     }
 }

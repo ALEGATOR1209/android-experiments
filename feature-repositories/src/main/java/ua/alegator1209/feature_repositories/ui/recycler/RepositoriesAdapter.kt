@@ -1,4 +1,4 @@
-package ua.alegator1209.feature_repositories.ui
+package ua.alegator1209.feature_repositories.ui.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +9,8 @@ import ua.alegator1209.feature_repositories.databinding.RecyclerItemRepositoryBi
 
 internal class RepositoriesAdapter : RecyclerView.Adapter<RepositoriesAdapter.RepositoryHolder>() {
     private var dataset: List<Repository> = listOf()
+
+    var onRepositoryClicked: (Repository) -> Unit = {}
 
     override fun getItemCount(): Int = dataset.size
 
@@ -43,6 +45,10 @@ internal class RepositoriesAdapter : RecyclerView.Adapter<RepositoriesAdapter.Re
             starsCount.text = repository.stargazersCount.toString()
             forkCount.text = repository.forksCount.toString()
             desc.text = repository.description
+
+            root.setOnClickListener {
+                onRepositoryClicked(repository)
+            }
         }
     }
 }

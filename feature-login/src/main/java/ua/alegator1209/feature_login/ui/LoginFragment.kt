@@ -5,23 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core.common.Stage
-import ua.alegator1209.core_ui.BaseFragment
+import ua.alegator1209.core_ui.ui.fragments.FeatureSolitaryFragment
 import ua.alegator1209.feature_login.databinding.FragmentLoginBinding
 import ua.alegator1209.feature_login.di.LoginComponentProvider
 
-class LoginFragment : BaseFragment() {
+class LoginFragment : FeatureSolitaryFragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding get() = _binding!!
 
-    private var provider: LoginComponentProvider = LoginComponentProvider {
-        error("Provider not set!")
-    }
-
-    private val viewModel by lazy { ViewModelProvider(this)[LoginViewModel::class.java] }
+    private val provider: LoginComponentProvider by provider()
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,17 +67,11 @@ class LoginFragment : BaseFragment() {
 
     private fun handleSuccess() {
         enableInput()
-        router.goTo(Stage.Repositories, saveToBackStack = false)
+        appRouter.goTo(Stage.Repositories, saveToBackStack = false)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(provider: LoginComponentProvider) = LoginFragment().also {
-            it.provider = provider
-        }
     }
 }

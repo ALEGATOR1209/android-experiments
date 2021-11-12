@@ -3,7 +3,7 @@ package ua.alegator1209.data.mappers
 import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.data.model.UserDto
 
-internal fun UserDto.toUser() = User(
+fun UserDto.toUser() = User(
     login = login,
     id = id,
     avatarUrl = avatarUrl,
@@ -19,7 +19,7 @@ internal fun UserDto.toUser() = User(
     following = following,
 )
 
-internal fun User.toDto() = UserDto(
+fun User.toDto() = UserDto(
     login = login,
     id = id,
     avatarUrl = avatarUrl,
