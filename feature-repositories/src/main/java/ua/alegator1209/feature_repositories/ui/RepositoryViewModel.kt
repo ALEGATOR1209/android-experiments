@@ -5,9 +5,11 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetContributorsUseCase
+import ua.alegator1209.feature_repositories.core.domain.interactors.GetLanguagesUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetRepositoriesUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.SelectRepositoryUseCase
 import ua.alegator1209.feature_repositories.core.domain.model.Contributor
+import ua.alegator1209.feature_repositories.core.domain.model.Language
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 import java.util.concurrent.atomic.AtomicBoolean
@@ -23,6 +25,9 @@ class RepositoryViewModel : ViewModel() {
 
     @Inject
     internal lateinit var getContributorsUseCase: GetContributorsUseCase
+
+    @Inject
+    internal lateinit var languagesUseCase: GetLanguagesUseCase
 
     @Inject
     internal lateinit var user: User
@@ -58,5 +63,13 @@ class RepositoryViewModel : ViewModel() {
         )
 
         return getContributorsUseCase(repository)
+    }
+
+    internal fun getLanguagesForSelectedRepository(): Single<List<Language>> {
+        val repository = selectRepositoryUseCase.selectedRepository ?: return Single.error(
+            IllegalStateException("Repository not selected")
+        )
+
+        return languagesUseCase(repository)
     }
 }

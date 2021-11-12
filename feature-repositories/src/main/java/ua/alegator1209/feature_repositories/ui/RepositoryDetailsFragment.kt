@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ua.alegator1209.core_ui.ui.fragments.PhaseFragment
 import ua.alegator1209.feature_repositories.R
 import ua.alegator1209.feature_repositories.core.domain.model.Contributor
+import ua.alegator1209.feature_repositories.core.domain.model.Language
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoryDetailsBinding
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
@@ -52,6 +53,11 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::showContributors, this::showError)
+
+        viewModel.getLanguagesForSelectedRepository()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::showLanguages, this::showError)
     }
 
     private fun showRepository(repository: Repository) = with(binding) {
@@ -71,6 +77,10 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
 
     private fun showContributors(contributors: List<Contributor>) {
         contributorsAdapter.updateContributors(contributors)
+    }
+
+    private fun showLanguages(languages: List<Language>) {
+        binding.languagesBar.setLanguages(languages)
     }
 
     private fun showError(cause: Throwable) {

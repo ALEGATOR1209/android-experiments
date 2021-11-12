@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LanguageBarView"/>
+    <declare-styleable name="LanguageBarView">
+        <attr name="defaultLanguages" format="boolean"/>
+        <attr name="barHeight" format="dimension"/>
+        <attr name="stats" format="boolean"/>
+        <attr name="statsPadding" format="dimension"/>
+        <attr name="statsEntryPadding" format="dimension"/>
+        <attr name="statsCircleRadius" format="dimension"/>
+        <attr name="statsTextAppearance" format="reference"/>
+    </declare-styleable>
+
+    <style name="LanguageBarViewTextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">monospace</item>
+    </style>
 </resources>

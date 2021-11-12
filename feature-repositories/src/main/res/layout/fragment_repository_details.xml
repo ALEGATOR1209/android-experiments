@@ -131,8 +131,17 @@
             app:layout_constraintTop_toBottomOf="@id/contributors_list"
             android:gravity="center"/>
         <ua.alegator1209.feature_repositories.ui.views.LanguageBarView
+            android:id="@+id/languagesBar"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:barHeight="10dp"
+            app:stats="true"
+            app:statsCircleRadius="5dp"
+            app:statsPadding="8dp"
+            app:statsEntryPadding="4dp"
+            app:statsTextAppearance="@style/LanguageBarViewTextAppearance"
+            tools:defaultLanguages="true"
             app:layout_constraintTop_toBottomOf="@id/languages_title"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

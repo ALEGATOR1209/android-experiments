@@ -9,4 +9,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#9F9F9F</color>
     <color name="black_opacity_60">#99000000</color>
+
+    <color name="kotlin">#7F3AFF</color>
+    <color name="java">#9A5000</color>
+    <color name="c_sharp">#3A5BFF</color>
+    <color name="go">#3AFFE1</color>
+    <color name="assembly">#5A595A</color>
+    <color name="javascript">#FFC000</color>
+    <color name="python">#FFDB80</color>
+    <color name="ruby">#FF6060</color>
+    <color name="language_default">#B1B1B1</color>
 </resources>
