@@ -1,4 +1,4 @@
-package ua.alegator1209.core_ui
+package ua.alegator1209.core_ui.di
 
 import android.app.Application
 import android.content.Context
@@ -20,8 +20,7 @@ import ua.alegator1209.core.domain.repository.TokenRepository
 import ua.alegator1209.data.di.DataModule
 import ua.alegator1209.data.di.NonAuthorized
 
-fun Application.baseComponent(baseUrl: String) = DaggerBaseComponent
-    .factory()
+fun Application.baseComponent(baseUrl: String) = DaggerBaseComponent.factory()
     .create(
         baseModule = BaseModule(this),
         dataModule = DataModule(baseUrl, this)

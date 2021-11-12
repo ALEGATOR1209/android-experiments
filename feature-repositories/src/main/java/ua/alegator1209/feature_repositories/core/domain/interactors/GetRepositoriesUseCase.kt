@@ -4,32 +4,38 @@ import io.reactivex.rxjava3.core.Single
 import ua.alegator1209.feature_repositories.core.datasource.RepositoriesCachingDataSource
 import ua.alegator1209.feature_repositories.core.datasource.RepositoriesDataSource
 import ua.alegator1209.feature_repositories.core.domain.model.Repository
-import kotlin.math.max
 
 internal class GetRepositoriesUseCase(
     private val remote: RepositoriesDataSource,
     private val local: RepositoriesCachingDataSource,
 ) {
     val PAGE_SIZE = 10
-    private var page: Int = 0
-    private var lastIndex = -1
+    private var cache = linkedSetOf<Repository>()
 
-    operator fun invoke(): Single<List<Repository>> = remote.getRepositories(PAGE_SIZE, page + 1)
-        .doOnSuccess { repos ->
-            local.save(repos)
-                .doOnError { it.printStackTrace() }
-                .subscribe()
-        }.onErrorResumeWith(
-            Single.defer {
-                local.getRepositories(PAGE_SIZE, page)
-            }
-        ).map { repos ->
-            repos.filterIndexed { i, _ ->
-                val pageIndex = page * PAGE_SIZE + i
-                pageIndex > lastIndex
-            }.sortedBy(Repository::id)
-        }.doOnSuccess { repos ->
-            lastIndex = max(lastIndex, page * PAGE_SIZE + repos.lastIndex)
-            if (repos.size >= PAGE_SIZE) page++
+    operator fun invoke(page: Int, fromIndex: Int): Single<List<Repository>> {
+        val pageStartIndex = page * PAGE_SIZE
+        val pageEndIndex = pageStartIndex + PAGE_SIZE - 1
+
+        return if (cache.size >= pageEndIndex) {
+            Single.just(cache.toList().subList(pageStartIndex + fromIndex, pageEndIndex + 1))
+        } else {
+            getPage(page, fromIndex)
         }
+    }
+
+    private fun getPage(pageNum: Int, fromIndex: Int) = remote.getRepositories(PAGE_SIZE, pageNum)
+        .retry(2)
+        .map { it.drop(fromIndex) }
+        .onErrorResumeWith(
+            Single.defer {
+                local.getRepositories(PAGE_SIZE, pageNum)
+            }
+        ).doOnSuccess(this::save)
+
+    private fun save(repositories: List<Repository>) {
+        cache.addAll(repositories)
+        local.save(repositories)
+            .doOnError { it.printStackTrace() }
+            .subscribe()
+    }
 }

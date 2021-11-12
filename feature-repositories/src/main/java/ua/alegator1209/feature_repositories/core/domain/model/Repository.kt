@@ -24,3 +24,5 @@ internal data class Repository(
     val createdAt: Date,
     val updatedAt: Date,
 )
+
+internal val Repository.owner: String get() = fullName.substringBefore('/')
