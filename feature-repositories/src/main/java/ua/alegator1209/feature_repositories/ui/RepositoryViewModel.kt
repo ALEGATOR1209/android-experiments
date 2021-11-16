@@ -7,6 +7,7 @@ import ua.alegator1209.core.domain.model.User
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetContributorsUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetLanguagesUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.GetRepositoriesUseCase
+import ua.alegator1209.feature_repositories.core.domain.interactors.GetTopicsUseCase
 import ua.alegator1209.feature_repositories.core.domain.interactors.SelectRepositoryUseCase
 import ua.alegator1209.feature_repositories.core.domain.model.Contributor
 import ua.alegator1209.feature_repositories.core.domain.model.Language
@@ -30,7 +31,15 @@ class RepositoryViewModel : ViewModel() {
     internal lateinit var languagesUseCase: GetLanguagesUseCase
 
     @Inject
+    internal lateinit var topicsUseCase: GetTopicsUseCase
+
+    @Inject
     internal lateinit var user: User
+
+    internal val selectedRepository: Single<Repository> get() = selectRepositoryUseCase
+        .selectedRepository
+        ?.let { Single.just(it) }
+        ?: Single.error(IllegalStateException("Repository not selected"))
 
     internal val backStack = mutableListOf<RepositoryPhase>()
 
@@ -51,25 +60,15 @@ class RepositoryViewModel : ViewModel() {
         selectRepositoryUseCase(repository)
     }
 
-    internal fun selectedRepositoryInfo(): Single<Repository> {
-        return selectRepositoryUseCase.selectedRepository
-            ?.let { Single.just(it) }
-            ?: Single.error(IllegalStateException("No selected repository"))
-    }
-
     internal fun getContributorsForSelectedRepository(): Flowable<List<Contributor>> {
-        val repository = selectRepositoryUseCase.selectedRepository ?: return Flowable.error(
-            IllegalStateException("Repository not selected")
-        )
-
-        return getContributorsUseCase(repository)
+        return selectedRepository.toFlowable().flatMap { getContributorsUseCase(it) }
     }
 
     internal fun getLanguagesForSelectedRepository(): Single<List<Language>> {
-        val repository = selectRepositoryUseCase.selectedRepository ?: return Single.error(
-            IllegalStateException("Repository not selected")
-        )
+        return selectedRepository.flatMap { languagesUseCase(it) }
+    }
 
-        return languagesUseCase(repository)
+    internal fun getTopicsForSelectedRepository(): Single<List<String>> {
+        return selectedRepository.flatMap { topicsUseCase(it) }
     }
 }

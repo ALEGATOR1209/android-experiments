@@ -17,7 +17,13 @@ import ua.alegator1209.feature_repositories.data.local.db.RepositoryDao
 import ua.alegator1209.feature_repositories.data.remote.api.RepositoriesApi
 import ua.alegator1209.feature_repositories.data.remote.datasource.RepositoriesRemoteDataSource
 
-@Module(includes = [ContributorsModule::class, LanguagesModule::class])
+@Module(
+    includes = [
+        ContributorsModule::class,
+        LanguagesModule::class,
+        TopicsModule::class,
+    ]
+)
 class RepositoryModule {
     @Provides
     @PerFeature
@@ -50,7 +56,10 @@ class RepositoryModule {
 
     @Provides
     @PerFeature
-    internal fun provideDb(context: Context): RepositoriesDatabase = db(context)
+    internal fun provideDb(context: Context): RepositoriesDatabase = db(
+        context,
+        RepositoriesDatabase.Migrations.FROM_2_TO_3,
+    )
 
     @Provides
     @PerFeature
