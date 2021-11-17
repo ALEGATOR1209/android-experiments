@@ -16,6 +16,7 @@ import ua.alegator1209.feature_repositories.core.domain.model.Repository
 import ua.alegator1209.feature_repositories.databinding.FragmentRepositoryDetailsBinding
 import ua.alegator1209.feature_repositories.routing.RepositoryPhase
 import ua.alegator1209.feature_repositories.ui.recycler.ContributorsAdapter
+import ua.alegator1209.feature_repositories.ui.recycler.TopicsAdapter
 
 internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
     private var _binding: FragmentRepositoryDetailsBinding? = null
@@ -24,6 +25,7 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
     private val viewModel: RepositoryViewModel by featureViewModel()
 
     private val contributorsAdapter = ContributorsAdapter()
+    private val topicsAdapter = TopicsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,8 +36,8 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.contributorsList.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        recyclerContributors.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -44,10 +46,32 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
             adapter = contributorsAdapter
         }
 
-        viewModel.selectedRepositoryInfo()
+        recyclerTopics.apply {
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            adapter = topicsAdapter
+        }
+
+        branchesButton.setOnClickListener {
+            router.goTo(RepositoryPhase.Branches)
+        }
+
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModel.selectedRepository
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::showRepository, this::showError)
+
+        viewModel.getTopicsForSelectedRepository()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::showTopics, this::showError)
 
         viewModel.getContributorsForSelectedRepository()
             .subscribeOn(Schedulers.io())
@@ -81,6 +105,10 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
 
     private fun showLanguages(languages: List<Language>) {
         binding.languagesBar.setLanguages(languages)
+    }
+
+    private fun showTopics(topics: List<String>) {
+        topicsAdapter.update(topics)
     }
 
     private fun showError(cause: Throwable) {

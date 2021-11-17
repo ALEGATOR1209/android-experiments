@@ -88,9 +88,9 @@ workflows:
             tags:
               only: /.*/
       - lint
-      - unit-test:
-          requires:
-            - assembleDebug
+#      - unit-test:
+#          requires:
+#            - assembleDebug
       - publish-to-github:
           requires:
             - assembleDebug

@@ -20,11 +20,20 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_topics"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:listitem="@layout/recycler_item_repository_topic"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/lockIcon"
             android:src="@drawable/ic_lock"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/recycler_topics"
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="gone"
             tools:visibility="visible"
@@ -39,7 +48,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/recycler_topics"
             app:layout_constraintStart_toEndOf="@id/lockIcon"
             android:layout_marginStart="8dp"/>
         <ImageView
@@ -94,6 +103,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <Button
+            android:id="@+id/branchesButton"
+            android:text="@string/branches"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:drawableTint="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/desc"/>
+
         <TextView
             android:id="@+id/contributors_title"
             android:layout_width="match_parent"
@@ -103,11 +127,11 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/desc"
+            app:layout_constraintTop_toBottomOf="@id/branchesButton"
             android:gravity="center"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contributors_list"
+            android:id="@+id/recycler_contributors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -116,7 +140,6 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/contributors_title"
-            tools:layout_editor_absoluteX="8dp"
             tools:listitem="@layout/recycler_item_contributor" />
 
         <TextView
@@ -128,7 +151,7 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/contributors_list"
+            app:layout_constraintTop_toBottomOf="@id/recycler_contributors"
             android:gravity="center"/>
         <ua.alegator1209.feature_repositories.ui.views.LanguageBarView
             android:id="@+id/languagesBar"

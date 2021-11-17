@@ -1,9 +1,6 @@
 package ua.alegator1209.feature_repositories.data.local.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
@@ -29,4 +26,19 @@ internal interface RepositoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveLanguages(languages: List<LanguageEntity>): Completable
+
+    @Query("SELECT * FROM topics WHERE repository_id = :repositoryId")
+    fun getTopics(repositoryId: Int): Single<TopicsRecordEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveTopics(record: TopicsRecordEntity): Completable
+
+    @Query("SELECT * FROM branches WHERE repository_id = :repositoryId")
+    fun getBranches(repositoryId: Int): Single<List<BranchEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveBranches(list: List<BranchEntity>): Completable
+
+    @Query("DELETE FROM branches WHERE repository_id = :repositoryId")
+    fun clearBranches(repositoryId: Int): Completable
 }

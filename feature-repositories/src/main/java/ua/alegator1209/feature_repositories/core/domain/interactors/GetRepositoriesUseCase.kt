@@ -35,7 +35,6 @@ internal class GetRepositoriesUseCase(
     private fun save(repositories: List<Repository>) {
         cache.addAll(repositories)
         local.save(repositories)
-            .doOnError { it.printStackTrace() }
-            .subscribe()
+            .subscribe({}, Throwable::printStackTrace)
     }
 }

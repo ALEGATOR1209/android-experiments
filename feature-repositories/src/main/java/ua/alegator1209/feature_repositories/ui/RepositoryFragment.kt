@@ -12,9 +12,11 @@ class RepositoryFragment : FeatureRouterFragment<RepositoryPhase>() {
         get() = when (this) {
             RepositoryPhase.Detailed -> RepositoryDetailsFragment()
             RepositoryPhase.List -> RepositoryListFragment()
+            RepositoryPhase.Branches -> RepositoryBranchesFragment()
         }
 
     private val provider: RepositoryComponentProvider by provider()
+    internal val component by lazy { provider.provideRepositoryComponent() }
     private val viewModel: RepositoryViewModel by viewModel()
 
     override val featureBackStack: MutableList<RepositoryPhase>
@@ -22,7 +24,7 @@ class RepositoryFragment : FeatureRouterFragment<RepositoryPhase>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        provider.provideRepositoryComponent().inject(viewModel)
+        component.inject(viewModel)
         goTo(featureBackStack.lastOrNull() ?: RepositoryPhase.List)
     }
 }
