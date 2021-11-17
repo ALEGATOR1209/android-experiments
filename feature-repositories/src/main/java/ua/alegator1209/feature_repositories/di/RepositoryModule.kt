@@ -22,6 +22,7 @@ import ua.alegator1209.feature_repositories.data.remote.datasource.RepositoriesR
         ContributorsModule::class,
         LanguagesModule::class,
         TopicsModule::class,
+        BranchesModule::class,
     ]
 )
 class RepositoryModule {

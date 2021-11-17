@@ -36,8 +36,8 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.recyclerContributors.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+        recyclerContributors.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -46,7 +46,7 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
             adapter = contributorsAdapter
         }
 
-        binding.recyclerTopics.apply {
+        recyclerTopics.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -55,6 +55,14 @@ internal class RepositoryDetailsFragment : PhaseFragment<RepositoryPhase>() {
             adapter = topicsAdapter
         }
 
+        branchesButton.setOnClickListener {
+            router.goTo(RepositoryPhase.Branches)
+        }
+
+        loadData()
+    }
+
+    private fun loadData() {
         viewModel.selectedRepository
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

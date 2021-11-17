@@ -14,4 +14,6 @@
     <string name="public_label">Public</string>
     <string name="contributors">Contributors</string>
     <string name="languages">Languages</string>
+    <string name="branches">Branches</string>
+    <string name="repo_branches_title">%s branches</string>
 </resources>

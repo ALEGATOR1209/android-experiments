@@ -11,6 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ContributorEntity::class,
         LanguageEntity::class,
         TopicsRecordEntity::class,
+        BranchEntity::class,
     ],
     version = 3
 )
@@ -26,7 +27,13 @@ internal abstract class RepositoriesDatabase : RoomDatabase() {
                             repository_id INTEGER NOT NULL,
                             topics TEXT NOT NULL,
                             PRIMARY KEY (repository_id)
-                        )
+                        );
+
+                        CREATE TABLE branches (
+                            repository_id INTEGER NOT NULL,
+                            name TEXT NOT NULL,
+                            protected BOOLEAN NOT NULL
+                        );                        
                     """.trimMargin()
                 )
             }

@@ -1,9 +1,6 @@
 package ua.alegator1209.feature_repositories.data.local.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
@@ -35,4 +32,13 @@ internal interface RepositoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveTopics(record: TopicsRecordEntity): Completable
+
+    @Query("SELECT * FROM branches WHERE repository_id = :repositoryId")
+    fun getBranches(repositoryId: Int): Single<List<BranchEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveBranches(list: List<BranchEntity>): Completable
+
+    @Query("DELETE FROM branches WHERE repository_id = :repositoryId")
+    fun clearBranches(repositoryId: Int): Completable
 }
